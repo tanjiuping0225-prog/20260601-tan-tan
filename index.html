@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>課程報價試算器</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f5f3ee;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 { text-align: center; color: #6b7fa3; }
+
+        .input-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .results {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #f5f3ee;
+        }
+
+        .result-item { margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .total-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6b7fa3;
+            margin-top: 0.5rem;
+        }
+        .warning { color: #d9534f; font-size: 0.9rem; margin-top: 0.5rem; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>課程報價試算器</h2>
+    <div class="input-group">
+        <label>學員人數</label>
+        <input type="number" id="students" placeholder="0" oninput="calculate()">
+    </div>
+    <div class="input-group">
+        <label>上課時數</label>
+        <input type="number" id="hours" placeholder="0" oninput="calculate()">
+    </div>
+    <div class="input-group">
+        <label>每小時單價 (NT$)</label>
+        <input type="number" id="price" placeholder="0" oninput="calculate()">
+    </div>
+    <div class="input-group">
+        <label>折扣率 (%)</label>
+        <input type="number" id="discount" placeholder="0" oninput="calculate()">
+    </div>
+
+    <div class="results">
+        <div class="result-item">小計：NT$ <span id="subtotal">0</span></div>
+        <div class="result-item">折扣金額：NT$ <span id="discountAmt">0</span></div>
+        <div class="result-item">總計：</div>
+        <div class="total-price">NT$ <span id="total">0</span></div>
+        <div id="warningMsg" class="warning">折扣率過高，請確認</div>
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        const students = parseFloat(document.getElementById('students').value) || 0;
+        const hours = parseFloat(document.getElementById('hours').value) || 0;
+        const price = parseFloat(document.getElementById('price').value) || 0;
+        const discountRate = parseFloat(document.getElementById('discount').value) || 0;
+
+        const subtotal = students * hours * price;
+        const discountAmt = subtotal * (discountRate / 100);
+        const total = subtotal - discountAmt;
+
+        document.getElementById('subtotal').textContent = subtotal.toLocaleString('zh-TW');
+        document.getElementById('discountAmt').textContent = discountAmt.toLocaleString('zh-TW');
+        document.getElementById('total').textContent = total.toLocaleString('zh-TW');
+
+        const warning = document.getElementById('warningMsg');
+        warning.style.display = (discountRate > 30) ? 'block' : 'none';
+    }
+</script>
+
+</body>
+</html>
